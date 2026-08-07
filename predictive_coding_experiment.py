@@ -69,6 +69,7 @@ class PredictiveCodingNetwork:
     def _predict_down(self, r_above, l):
         return self._f(self.W[l] @ r_above + self.b[l])
 
+
     def _infer(self, x, y=None):
         r = [np.zeros(s) for s in self.sizes]
         r[0] = x.copy()
@@ -86,7 +87,7 @@ class PredictiveCodingNetwork:
             for l in range(1, self.n_layers - 1):
                 grad = (errors[l]
                         - self.W[l-1].T @ (errors[l-1] * self._df(self.W[l-1] @ r[l] + self.b[l-1])))
-                r[l] -= self.lr_a * grad
+                r[l] -= self.lr_a * np.clip(grad, -1, 1)
 
         errors = [r[l] - self._predict_down(r[l+1], l)
                   for l in range(self.n_layers - 1)]
@@ -94,8 +95,10 @@ class PredictiveCodingNetwork:
 
     def _update(self, r, errors):
         for l in range(self.n_layers - 1):
-            self.W[l] -= self.lr_w * np.outer(errors[l], r[l+1])
-            self.b[l] -= self.lr_w * errors[l]
+            grad_w = np.outer(errors[l], r[l+1])
+            grad_b = errors[l]
+            self.W[l] -= self.lr_w * np.clip(grad_w, -1, 1)
+            self.b[l] -= self.lr_w * np.clip(grad_b, -1, 1)
 
     def fit(self, X, y, epochs=100, verbose=True):
         for epoch in range(epochs):
@@ -111,6 +114,14 @@ class PredictiveCodingNetwork:
 
             if verbose:
                 loop.set_postfix(Acc=f"{correct/len(X):.4f}")
+
+
+    def get_hidden_features(self, X):
+        features = []
+        for x in X:
+            r, _ = self._infer(x)
+            features.append(r[-2])
+        return np.array(features)
 
     def predict(self, X):
         return np.array([
@@ -150,6 +161,45 @@ def main():
         model.fit(X_train, y_train, epochs=exp['epochs'], verbose=False)
         train_acc = np.mean(model.predict(X_train) == y_train)
         print(f"Final Train Accuracy: {train_acc:.4f}\n")
+
+
+    print("\n--- Running: Logistic Regression on Hidden Features ---")
+    from sklearn.linear_model import LogisticRegression
+
+
+
+    np.random.seed(42)
+    model = PredictiveCodingNetwork(
+        layer_sizes=[n_feat, 32, 16, 1],
+        lr_weights=0.0001,
+        lr_activities=0.005,
+        n_inference_steps=30
+    )
+
+
+
+    # Train the PCN
+    model.fit(X_train, y_train, epochs=10, verbose=False)
+
+    # Extract features
+    hidden_features = model.get_hidden_features(X_train)
+
+    # Fit Logistic Regression on the extracted features
+
+
+    # Replace NaN and Inf with 0
+    hidden_features = np.nan_to_num(hidden_features)
+
+    # Fit Logistic Regression on the extracted features
+    from sklearn.linear_model import LogisticRegression
+    clf = LogisticRegression(random_state=42, max_iter=1000)
+    clf.fit(hidden_features, y_train)
+
+    # Evaluate
+    lr_train_acc = clf.score(hidden_features, y_train)
+    print(f"Final Train Accuracy (Logistic Regression on PCN features): {lr_train_acc:.4f}\n")
+
+
 
 if __name__ == "__main__":
     main()

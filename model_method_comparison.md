@@ -28,3 +28,9 @@ The experimental parameters we tested included:
 In all hyperparameter configurations tested, the Predictive Coding Network achieved a training accuracy of exactly **61.62%**.
 
 This accuracy corresponds exactly to the proportion of passengers in the training set who did not survive (majority class prediction). This indicates that the custom algorithm, in its current form, suffers from mode collapse and fails to learn meaningful patterns from the features, reverting instead to predicting the most frequent class (0). It is significantly outperformed by standard models like Gradient Boosting (~82.8%).
+
+## Option 2 Experiment: Logistic Regression on PCN Hidden Activities
+We also explored using a proper linear classifier (Logistic Regression) on top of the last hidden layer activities (`r[-2]`) instead of relying on the PCN's internal output inference.
+
+**Findings:**
+Even with Logistic Regression applied to the extracted hidden features, the training accuracy remained firmly at **61.62%**. This further confirms that the Predictive Coding Network is failing to extract linearly separable or informative features from the dataset, and its internal representations have entirely collapsed to the majority class bias.
