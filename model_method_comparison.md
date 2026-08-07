@@ -42,3 +42,10 @@ Following up on the initial mode-collapse, we integrated a "Precision-Weighted" 
 - With the precision-weighted architecture, the network successfully escapes the mode-collapse (it no longer predicts entirely 0s).
 - However, its training accuracy with standard scaling and features hovers around **~45-48%**.
 - The user's external tests achieved a Kaggle score of **0.68660** using this architecture, suggesting that while it can learn, it's highly sensitive to feature preprocessing, scaling choices, and hyperparameter tuning compared to robust tree-based models like Random Forests.
+
+## Option 4 Experiment: Precision-Weighted PCN (Reduced Inference Steps)
+Building on the Version 2 architecture, we tested a "Version 3" configuration where the number of iterative inference steps (`n_inference_steps`) was reduced from 50 to 30.
+
+**Findings:**
+- Reducing the inference steps acts as a form of early stopping during the inference phase, preventing the network from overfitting its internal representations to noisy or difficult samples.
+- While local training accuracy remained relatively low (~43%), the user's external tests demonstrated a noticeable boost in generalization, achieving a Kaggle score of **0.70334**. This highlights that finding the right balance of inference iterations is crucial for the generalization of Predictive Coding Networks.

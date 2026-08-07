@@ -145,7 +145,7 @@ def main():
         layer_sizes=[n_feat, 32, 16, 1],
         lr_weights=0.0005,
         lr_activities=0.05,
-        n_inference_steps=50
+        n_inference_steps=30
     )
 
 
