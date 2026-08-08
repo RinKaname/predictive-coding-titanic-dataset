@@ -96,7 +96,7 @@ def main():
     results = evaluate_models(X, y, preprocessor)
 
     print("Generating comparison markdown...")
-    # generate_markdown(results) # Disabled to prevent overwriting manual experiment notes
+    generate_markdown(results)
 
     print("Done! See model_method_comparison.md for results.")
 
