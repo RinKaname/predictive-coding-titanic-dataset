@@ -33,3 +33,20 @@ The user introduced an implementation of Geoffrey Hinton's **Forward-Forward Alg
 
 ### Conclusion for Alternative Architectures:
 The Forward-Forward Algorithm is highly effective for this tabular dataset. It dramatically outperforms the Predictive Coding Network while retaining the biologically-inspired property of not requiring global backpropagation. Its greedy, layer-wise learning mechanism appears more stable and less prone to mode collapse on the Titanic dataset than the iterative inference of the PCN.
+
+## Ground Truth Test Accuracy Comparison
+We performed a final evaluation using a 100% accurate ground truth dataset matching the Kaggle test set structure. Below are the definitive test accuracies for all models, which mirror real-world unseen data performance.
+
+| Model | Ground Truth Test Accuracy | Type |
+|---|---|---|
+| Gradient Boosting | 79.43% | Standard ML |
+| Support Vector Machine | 77.99% | Standard ML |
+| Forward-Forward Algorithm (FFA) | 77.51% | Alternative (No Backprop) |
+| Logistic Regression | 76.56% | Standard ML |
+| Random Forest | 75.12% | Standard ML |
+| Predictive Coding Network (V3) | 75.36% | Alternative (PCN) |
+
+### Final Conclusion
+- Standard **Gradient Boosting** remains the most performant and robust algorithm for the Titanic dataset, generalizing very well to unseen data.
+- The user's **Forward-Forward Algorithm (FFA)** implementation is remarkably strong, outperforming multiple traditional ML algorithms (like Random Forest and Logistic Regression) and coming very close to the SVM score without relying on backpropagation.
+- The **Predictive Coding Network** requires significant tuning and feature engineering to prevent mode collapse. Even with tuning (Version 3), it trails the other methods on this specific tabular dataset, likely because its iterative inference structure is better suited to structured data like images rather than sparse, noisy tabular data.

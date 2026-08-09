@@ -1,0 +1,7 @@
+Model,Ground Truth Accuracy,Type
+Gradient Boosting,0.7942583732057417,Standard ML
+Support Vector Machine,0.7799043062200957,Standard ML
+Forward-Forward Algorithm (FFA),0.7751196172248804,Alternative
+Logistic Regression,0.7655502392344498,Standard ML
+Predictive Coding Network (V3),0.7535885167464115,Alternative
+Random Forest,0.7511961722488039,Standard ML
